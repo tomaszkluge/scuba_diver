@@ -52,14 +52,18 @@ class Diver():
         def __init__(self, x, y):
             self.x = x
             self.y = y
-            self.height = 100
-            self.width = 100
+            self.height = 50
+            self.width = 50
             self.shape = pygame.Rect(self.x, self.y, self.width, self.height)
             self.graphic = pygame.image.load(os.path.join('cave_diver.png'))
+
+        def update_shape(self):
+            self.shape = pygame.Rect(self.x, self.y, self.width, self.height)
         def draw(self):
             screen.blit(self.graphic, (self.x, self.y))
         def move(self, speed):
             self.y = self.y + speed
+            self.update_shape()
 
 
 Rocks = []
@@ -74,8 +78,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE and view == 'menu':
+            if event.key == pygame.K_SPACE and (view == 'menu' or view == 'end'):
+                # Zresetuj grę
                 view = 'game'
+                player = Diver(250, 275)
+                Rocks = [Rock(i * width / 20, width / 20) for i in range(21)]
             if event.key == pygame.K_UP:
                 dy = -1
             if event.key == pygame.K_DOWN:
@@ -104,10 +111,12 @@ while running:
         player.move(dy)
     elif view == "end":
         graphic = pygame.image.load(os.path.join('cave_diver.png'))
-        screen.blit(graphic, (80,30))
-        write("You loose", 50, 290, 20, color=(255, 0, 0))
-        write('Press space to start', 80, 150, 20, color=(0, 0, 255))
+        screen.blit(graphic, (80, 30))
+        write("You lose", 50, 290, 20, color=(255, 0, 0))
+        write('Press space to restart', 80, 150, 20, color=(0, 0, 255))
+
     pygame.display.update()
 
 pygame.quit()
 quit()
+
